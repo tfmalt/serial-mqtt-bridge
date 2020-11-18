@@ -1,0 +1,4 @@
+.pio
+SECRETS
+.vscode
+lib/Credentials/Credentials.h
