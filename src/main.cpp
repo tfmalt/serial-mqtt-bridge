@@ -20,14 +20,19 @@ enum MQTTMessageType {
   CONNECT,
   CONNECT_ACK,
   SUBSCRIBE,
+  UNSUBSCRIBE,
   STATUS_NO_SUB,
   STATUS_OK,
+  PUBLISH,
   MESSAGE
 };
+
+enum MQTTQoS { AT_MOST_ONCE = 0, AT_LEAST_ONCE = 1, EXACTLY_ONCE = 2 };
 
 struct MQTTMessage {
   uint8_t type;
   uint8_t count;
+  uint8_t qos;
   char topic[32];
   char message[256];
 };
@@ -138,9 +143,6 @@ void setup() {
 
   mqtt.setup();
   mqtt.setLastwillTopic(topic_status.c_str(), 0, true, "Disconnected");
-  // mqtt.subscribe(topic_command);
-  // mqtt.subscribe(topic_query);
-
   mqtt.onReady(handleReady);
   mqtt.onDisconnect(handleDisconnect);
   mqtt.onError(handleError);
