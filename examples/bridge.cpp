@@ -1,5 +1,5 @@
 /**
- * @file main.cpp
+ * @file bridge.cpp
  * @author Thomas Malt (thomas@malt.no)
  * @brief An ESP8266/ESP32 firmware to translate between serial<->mqtt<->wifi to
  * deliver mqtt to arduinos and other devices like teensys that lack them
