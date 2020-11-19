@@ -1,4 +1,4 @@
-# serial-mqtt-wifi-bridge
+# A serial to mqtt bridge for on ESP8266 and ESP32
 
 This is a simple firmware for ESP8266 and ESP32 to act as an opinionated
 serial to mqtt bridge, to connect microcontrollers, such as Arduinos and
