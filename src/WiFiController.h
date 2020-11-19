@@ -14,21 +14,20 @@
 // #include <LedshelfConfig.hpp>
 
 class WiFiController {
-public:
+ public:
   WiFiController();
 
-  void connect(const char *ssid, const char *psk, const char *hostname);
+  void connect(const char* ssid, const char* psk, const char* hostname);
 
-  WiFiClient &getWiFiClient();
-  WiFiController &enableVerboseOutput();
+  WiFiClient& getWiFiClient();
+  WiFiController& enableVerboseOutput();
 
-private:
+ private:
   bool VERBOSE = false;
-  // WiFiClientSecure wifiClient;
   WiFiClient wifiClient;
 #ifdef ESP32
   void handleEvent(WiFiEvent_t event);
 #endif
 };
 
-#endif // WiFiController_h
+#endif  // WiFiController_h

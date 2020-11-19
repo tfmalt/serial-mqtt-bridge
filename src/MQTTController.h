@@ -3,7 +3,6 @@
 #define MQTTController_h
 
 #include <Arduino.h>
-#include <Credentials.h>
 #include <NTPClient.h>
 #include <PubSubClient.h>
 #include <WiFiUdp.h>
