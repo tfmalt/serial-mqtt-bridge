@@ -13,16 +13,27 @@
 #endif
 // #include <LedshelfConfig.hpp>
 
+#define WIFI_DEFAULT_HOSTNAME "serialmqttbridge"
+
 class WiFiController {
  public:
   WiFiController();
+  WiFiController(const char* ssid,
+                 const char* psk,
+                 const char* hostname = WIFI_DEFAULT_HOSTNAME)
+      : _ssid(ssid), _psk(psk), _hostname(hostname){};
 
+  void connect();
   void connect(const char* ssid, const char* psk, const char* hostname);
 
   WiFiClient& getWiFiClient();
   WiFiController& enableVerboseOutput();
 
  private:
+  const char* _ssid;
+  const char* _psk;
+  const char* _hostname;
+
   bool VERBOSE = false;
   WiFiClient wifiClient;
 #ifdef ESP32

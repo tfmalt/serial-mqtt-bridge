@@ -1,7 +1,7 @@
 #include "WiFiController.h"
-#if defined(ESP32)
+#ifdef ESP32
 #include <WiFi.h>
-#elif defined(ESP8266)
+#elif ESP8266
 #include <ESP8266WiFi.h>
 #endif
 
@@ -12,10 +12,19 @@ WiFiController::WiFiController() {}
  */
 void WiFiController::connect(const char* ssid,
                              const char* psk,
-                             const char* hostname) {
+                             const char* hostname = WIFI_DEFAULT_HOSTNAME) {
+  this->_ssid = ssid;
+  this->_psk = psk;
+  this->_hostname = hostname;
+
+  this->connect();
+}
+
+void WiFiController::connect() {
   if (VERBOSE) {
-    Serial.printf("[wifi] ||| connecting to ssid: %s: ", ssid);
+    Serial.printf("[wifi] ||| connecting to ssid: %s: ", _ssid);
   }
+
   WiFi.disconnect(true);
   WiFi.mode(WIFI_STA);
 
@@ -51,7 +60,7 @@ void WiFiController::connect(const char* ssid,
     }
   });
 #endif
-  WiFi.begin(ssid, psk);
+  WiFi.begin(_ssid, _psk);
 
 #ifdef ESP32
   WiFi.setHostname(MQTT_CLIENT);
@@ -127,8 +136,8 @@ void WiFiController::handleEvent(WiFiEvent_t event) {
       delay(500);
       ESP.restart();
       break;
-    // SYSTEM_EVENT_STA_AUTHMODE_CHANGE      < the auth mode of AP connected by
-    // ESP32 station changed
+    // SYSTEM_EVENT_STA_AUTHMODE_CHANGE      < the auth mode of AP connected
+    // by ESP32 station changed
     case SYSTEM_EVENT_STA_AUTHMODE_CHANGE:
 #ifdef DEBUG
       Serial.printf("[wifi]   got SYSTEM_EVENT_STA_AUTHMODE_CHANGE [%i]\n",

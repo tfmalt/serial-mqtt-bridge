@@ -5,8 +5,8 @@
 #include <Arduino.h>
 #include <NTPClient.h>
 #include <PubSubClient.h>
+#include <WiFiController.h>
 #include <WiFiUdp.h>
-#include <WiFiController.hpp>
 #include <algorithm>
 #include <functional>
 #include <string>
@@ -36,11 +36,7 @@ class MQTTController {
         mqtt_user(mqtt_user),
         mqtt_pass(mqtt_pass),
         mqtt_client(mqtt_client),
-        mqtt_port(mqtt_port){
-            // topic_information =
-            //     "/" + std::string{MQTT_CLIENT} +
-            //     std::string{MQTT_TOPIC_INFORMATION};
-        };
+        mqtt_port(mqtt_port){};
 
   ~MQTTController(){};
 

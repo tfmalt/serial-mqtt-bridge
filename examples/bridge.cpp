@@ -10,48 +10,16 @@
  *
  */
 #include <Arduino.h>
-#include <Credentials.h>
-#include <SerialTransfer.h>
-#include <SoftwareSerial.h>
-#include <MQTTController.hpp>
-#include <string>
+#include <MQTTController.h>
+#include <SerialMQTTBridge.h>
+#include <WiFiController.h>
 
-enum MQTTMessageType {
-  CONNECT,
-  CONNECT_ACK,
-  SUBSCRIBE,
-  UNSUBSCRIBE,
-  STATUS_NO_SUB,
-  STATUS_OK,
-  PUBLISH,
-  MESSAGE
-};
+WiFiController wifi(WIFI_SSID, WIFI_PSK, WIFI_HOSTNAME);
+MQTTController mqtt
 
-enum MQTTQoS { AT_MOST_ONCE = 0, AT_LEAST_ONCE = 1, EXACTLY_ONCE = 2 };
+void setup() {}
 
-struct MQTTMessage {
-  uint8_t type;
-  uint8_t count;
-  uint8_t qos;
-  char topic[32];
-  char message[256];
-};
-
-MQTTController mqtt(WIFI_SSID,
-                    WIFI_PSK,
-                    MQTT_SERVER,
-                    MQTT_USER,
-                    MQTT_PASS,
-                    MQTT_PORT);
-
-SoftwareSerial swSer;
-SerialTransfer rxtx;
-
-std::string mqtt_client(MQTT_USER);
-std::string topic_information = "/" + mqtt_client + MQTT_TOPIC_INFORMATION;
-std::string topic_status = "/" + mqtt_client + MQTT_TOPIC_STATUS;
-std::string topic_command = "/" + mqtt_client + MQTT_TOPIC_COMMAND;
-std::string topic_query = "/" + mqtt_client + MQTT_TOPIC_QUERY;
+void loop() {}
 
 // ==========================================================================
 // Handlers

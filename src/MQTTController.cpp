@@ -1,5 +1,5 @@
 
-#include "MQTTController.hpp"
+#include "MQTTController.h"
 
 #include <NTPClient.h>
 #include <WiFiUdp.h>
@@ -87,6 +87,8 @@ MQTTController& MQTTController::reSubscribe() {
                     res ? "true" : "false");
     }
   }
+
+  return *this;
 }
 
 /**
@@ -207,9 +209,9 @@ void MQTTController::publishInformationData() {
 
   const char* message = msg;
 
-  std::string topic =
-      "/" + std::string{MQTT_CLIENT} + std::string{MQTT_TOPIC_INFORMATION};
-  client.publish(topic.c_str(), message, false);
+  // std::string topic =
+  //     "/" + std::string{MQTT_CLIENT} + std::string{MQTT_TOPIC_INFORMATION};
+  // client.publish(topic.c_str(), message, false);
 
   free(msg);
 }
