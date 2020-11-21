@@ -205,7 +205,7 @@ void MQTTController::publishInformationData() {
            "{\"time\": \"%s\", \"version\": \"%s\", \"ip\": \"%s\", "
            "\"uptime\": %u, \"memory\": %d }",
            timeClient.getFormattedTime().c_str(), version,
-           wifi.localIP().toString().c_str(), ESP.getFreeHeap());
+           wifi.localIP().toString().c_str(), millis(), ESP.getFreeHeap());
 
   // const char* message = msg;
 
