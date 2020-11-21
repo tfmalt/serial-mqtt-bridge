@@ -21,9 +21,9 @@ class MQTTController {
  public:
   const char* version = VERSION;
 
-  //   MQTTController(){};
-  MQTTController(const char* mqtt_server, const uint16_t mqtt_port = 1883)
-      : mqtt_server(mqtt_server), mqtt_port(mqtt_port){};
+  MQTTController(){};
+  // MQTTController(const char* mqtt_server, const uint16_t _mqtt_port = 1883)
+  //     : mqtt_server(mqtt_server), mqtt_port(_mqtt_port){};
 
   ~MQTTController(){};
 
@@ -53,14 +53,14 @@ class MQTTController {
   void publishInformationData();
 
  private:
-  const char* wifi_ssid;
-  const char* wifi_psk;
-  const char* wifi_hostname;
-  const char* mqtt_server;
-  const char* mqtt_user;
-  const char* mqtt_pass;
-  const char* mqtt_client;
-  const uint16_t mqtt_port;
+  char* wifi_ssid;
+  char* wifi_psk;
+  char* wifi_hostname;
+  char* mqtt_server;
+  char* mqtt_user;
+  char* mqtt_pass;
+  char* mqtt_client;
+  uint16_t mqtt_port;
 
   char* topic_last_will;
   uint8_t last_will_qos;

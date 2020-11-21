@@ -3,3 +3,4 @@ SECRETS
 .vscode
 lib/Credentials/Credentials.h
 platformio.ini
+src/main.cpp
