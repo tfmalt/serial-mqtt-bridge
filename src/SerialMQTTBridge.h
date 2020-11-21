@@ -174,6 +174,7 @@ class SerialMQTTBridge {
       mqtt.enableVerboseOutput();
     }
 
+    Serial.println("getting ready to setup software serial");
     swSer.begin(_config.serial.baudrate, SWSERIAL_8N1, _config.serial.rxPin,
                 _config.serial.txPin);
 

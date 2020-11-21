@@ -166,6 +166,10 @@ MQTTController& MQTTController::onError(
 // End of Event handler callbacks
 // ==========================================================================
 
+MQTTController& MQTTController::enableVerboseOutput() {
+  return enableVerboseOutput(true);
+}
+
 MQTTController& MQTTController::enableVerboseOutput(bool v) {
   VERBOSE = v;
   return *this;
