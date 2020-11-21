@@ -54,11 +54,7 @@ class SerialMQTTBridge {
 
  public:
   SerialMQTTBridge(){};
-  SerialMQTTBridge& setup(SMBConfig config = nullptr) {
-    if (config != nullptr) {
-      _config = config;
-    }
-  };
+  SerialMQTTBridge& setup(SMBConfig config = _config) { _config = config; };
 }
 // std::string mqtt_client(MQTT_USER);
 // std::string topic_information = "/" + mqtt_client + MQTT_TOPIC_INFORMATION;
