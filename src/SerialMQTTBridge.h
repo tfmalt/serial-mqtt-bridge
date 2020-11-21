@@ -169,19 +169,27 @@ class SerialMQTTBridge {
     _config.serial.txPin = config.serial.txPin;
 
     if (_verbose) {
-      Serial.printf("[bridge] ||| running setup: sw serial rx: %i, tx: %i\n",
-                    _config.serial.rxPin, _config.serial.txPin);
+      Serial.printf(
+          "[bridge] ||| running setup: sw serial rx: %i, tx: %i, baud: %i\n",
+          _config.serial.rxPin, _config.serial.txPin, _config.serial.baudrate);
       mqtt.enableVerboseOutput();
     }
 
     Serial.println("getting ready to setup software serial");
+    Serial.printf("baud: %i, config: %i\n", _config.serial.baudrate,
+                  SWSERIAL_8N1);
+
     swSer.begin(_config.serial.baudrate, SWSERIAL_8N1, _config.serial.rxPin,
                 _config.serial.txPin);
 
+    Serial.println("done");
+
     rxtx.begin(swSer);
+    Serial.println("rxtx begun");
 
     mqtt.setup();
     // mqtt.setLastwillTopic(topic_status.c_str(), 0, true, "Disconnected");
+    Serial.println("mqtt begun");
 
     mqtt.onReady([this]() { this->handleReady(); });
     mqtt.onDisconnect([this](std::string msg) { this->handleDisconnect(msg); });
