@@ -203,11 +203,11 @@ void MQTTController::publishInformationData() {
 
   asprintf(&msg,
            "{\"time\": \"%s\", \"version\": \"%s\", \"ip\": \"%s\", "
-           "\"uptime\": %lu, \"memory\": %d }",
+           "\"uptime\": %u, \"memory\": %d }",
            timeClient.getFormattedTime().c_str(), version,
            wifi.localIP().toString().c_str(), ESP.getFreeHeap());
 
-  const char* message = msg;
+  // const char* message = msg;
 
   // std::string topic =
   //     "/" + std::string{MQTT_CLIENT} + std::string{MQTT_TOPIC_INFORMATION};
