@@ -21,26 +21,15 @@ class MQTTController {
  public:
   const char* version = VERSION;
 
-  MQTTController(const char* wifi_ssid,
-                 const char* wifi_psk,
-                 const char* mqtt_server,
-                 const char* mqtt_user,
-                 const char* mqtt_pass,
-                 const uint16_t mqtt_port = 1883,
-                 const char* wifi_hostname = "wifimqtt",
-                 const char* mqtt_client = "wifimqtt")
-      : wifi_ssid(wifi_ssid),
-        wifi_psk(wifi_psk),
-        wifi_hostname(wifi_hostname),
-        mqtt_server(mqtt_server),
-        mqtt_user(mqtt_user),
-        mqtt_pass(mqtt_pass),
-        mqtt_client(mqtt_client),
-        mqtt_port(mqtt_port){};
+  //   MQTTController(){};
+  MQTTController(const char* mqtt_server, const uint16_t mqtt_port = 1883)
+      : mqtt_server(mqtt_server), mqtt_port(mqtt_port){};
 
   ~MQTTController(){};
 
+  MQTTController& setClient(WiFiController& client);
   MQTTController& setup();
+
   MQTTController& onReady(OnReadyFunction callback);
   MQTTController& onDisconnect(OnDisconnectFunction callback);
   MQTTController& onError(OnErrorFunction callback);

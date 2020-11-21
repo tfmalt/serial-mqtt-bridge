@@ -5,6 +5,7 @@
 #include <MQTTController.h>
 #include <SerialTransfer.h>
 #include <SoftwareSerial.h>
+#include <WiFiController.h>
 
 typedef std::function<void()> OnReadyFunction;
 typedef std::function<void(std::string)> OnDisconnectFunction;
@@ -32,9 +33,33 @@ struct MQTTMessage {
   char message[256];
 };
 
-SoftwareSerial swSer;
-SerialTransfer rxtx;
+struct SMBConfig {
+  char* mqttserver;
+  uint16_t mqttport;
+  char* ssid;
+  char* psk;
+  char* hostname;
+  char* mqttclient;
+  char* mqttuser;
+  char* mqttpass;
+};
 
+class SerialMQTTBridge {
+ private:
+  SoftwareSerial swSer;
+  SerialTransfer rxtx;
+  WiFiController wifi;
+  MQTTController mqtt;
+  SMBConfig _config;
+
+ public:
+  SerialMQTTBridge(){};
+  SerialMQTTBridge& setup(SMBConfig config = nullptr) {
+    if (config != nullptr) {
+      _config = config;
+    }
+  };
+}
 // std::string mqtt_client(MQTT_USER);
 // std::string topic_information = "/" + mqtt_client + MQTT_TOPIC_INFORMATION;
 // std::string topic_status = "/" + mqtt_client + MQTT_TOPIC_STATUS;

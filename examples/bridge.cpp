@@ -14,10 +14,21 @@
 #include <SerialMQTTBridge.h>
 #include <WiFiController.h>
 
-WiFiController wifi(WIFI_SSID, WIFI_PSK, WIFI_HOSTNAME);
-MQTTController mqtt
+SerialMQTTBridge bridge;
 
-void setup() {}
+void setup() {
+  SMBConfig config;
+  config.hostname = WIFI_HOSTNAME;
+  config.mqttclient = MQTT_CLIENT;
+  config.mqttserver = MQTT_SERVER;
+  config.mqttport = MQTT_PORT;
+  config.mqttuser = MQTT_USER;
+  config.mqttpass = MQTT_PASS;
+  config.ssid = WIFI_SSID;
+  config.psk = WIFI_PSK;
+
+  bridge.setup(config);
+}
 
 void loop() {}
 

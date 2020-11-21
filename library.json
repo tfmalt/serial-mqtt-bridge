@@ -1,6 +1,6 @@
 {
   "name": "SerialMQTTBridge",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "An opinionated client to bridge library that lets you connect to a MQTT broker over serial.",
   "keywords": "ethernet, wifi, mqtt, serial, iot, esp32, esp8266",
   "repository": {
