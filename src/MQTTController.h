@@ -39,7 +39,7 @@ class MQTTController {
   void connect();
 
   MQTTController& setLastwillTopic(const char*, uint8_t, bool, const char*);
-  MQTTController& enableVerboseOutput();
+  MQTTController& enableVerboseOutput(bool v = true);
   MQTTController& subscribe(std::string topic);
   MQTTController& subscribe(const char* topic);
   MQTTController& subscribe(std::string topic, bool immediately);

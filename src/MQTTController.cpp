@@ -7,9 +7,9 @@
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3598, 60000);
 
-/**
- * Setup this instance of controller
- */
+// ==========================================================================
+// Setup MQTT Controller
+// ==========================================================================
 MQTTController& MQTTController::setup() {
   if (VERBOSE) {
     Serial.printf("[mqtt] ||| Setting up client: %s:%i\n", mqtt_server,
@@ -166,8 +166,8 @@ MQTTController& MQTTController::onError(
 // End of Event handler callbacks
 // ==========================================================================
 
-MQTTController& MQTTController::enableVerboseOutput() {
-  VERBOSE = true;
+MQTTController& MQTTController::enableVerboseOutput(bool v) {
+  VERBOSE = v;
   return *this;
 }
 

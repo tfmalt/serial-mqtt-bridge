@@ -171,7 +171,9 @@ class SerialMQTTBridge {
     if (_verbose) {
       Serial.printf("[bridge] ||| running setup: sw serial rx: %i, tx: %i\n",
                     _config.serial.rxPin, _config.serial.txPin);
+      mqtt.enableVerboseOutput();
     }
+
     swSer.begin(_config.serial.baudrate, SWSERIAL_8N1, _config.serial.rxPin,
                 _config.serial.txPin);
 
