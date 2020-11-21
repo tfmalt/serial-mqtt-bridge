@@ -203,7 +203,7 @@ void MQTTController::publishInformationData() {
 
   asprintf(&msg,
            "{\"time\": \"%s\", \"version\": \"%s\", \"ip\": \"%s\", "
-           "\"uptime\": %u, \"memory\": %d }",
+           "\"uptime\": %lu, \"memory\": %d }",
            timeClient.getFormattedTime().c_str(), version,
            wifi.localIP().toString().c_str(), millis(), ESP.getFreeHeap());
 
