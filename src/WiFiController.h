@@ -6,22 +6,25 @@
 #define WiFiController_h
 
 #include <Arduino.h>
+#include <string>
 #ifdef ESP32
 #include <WiFi.h>
 #elif ESP8266
 #include <ESP8266WiFi.h>
 #endif
-// #include <LedshelfConfig.hpp>
 
 #define WIFI_DEFAULT_HOSTNAME "serialmqttbridge"
+
+struct WiFiConfig {
+  std::string ssid;
+  std::string psk;
+  std::string hostname;
+};
 
 class WiFiController {
  public:
   WiFiController();
-  WiFiController(const char* ssid,
-                 const char* psk,
-                 const char* hostname = WIFI_DEFAULT_HOSTNAME)
-      : _ssid(ssid), _psk(psk), _hostname(hostname){};
+  WiFiController(const char* ssid, const char* psk, const char* hostname);
 
   void connect();
   void connect(const char* ssid, const char* psk, const char* hostname);
@@ -30,10 +33,7 @@ class WiFiController {
   WiFiController& enableVerboseOutput();
 
  private:
-  const char* _ssid;
-  const char* _psk;
-  const char* _hostname;
-
+  WiFiConfig config;
   bool VERBOSE = false;
   WiFiClient wifiClient;
 #ifdef ESP32

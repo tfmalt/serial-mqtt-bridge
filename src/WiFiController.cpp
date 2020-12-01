@@ -6,6 +6,13 @@
 #endif
 
 WiFiController::WiFiController() {}
+WiFiController::WiFiController(const char* ssid,
+                               const char* psk,
+                               const char* hostname = WIFI_DEFAULT_HOSTNAME) {
+  config.ssid = ssid;
+  config.psk = psk;
+  config.hostname = hostname;
+};
 
 /**
  * Configure and setup wifi
@@ -13,16 +20,16 @@ WiFiController::WiFiController() {}
 void WiFiController::connect(const char* ssid,
                              const char* psk,
                              const char* hostname = WIFI_DEFAULT_HOSTNAME) {
-  this->_ssid = ssid;
-  this->_psk = psk;
-  this->_hostname = hostname;
+  config.ssid = ssid;
+  config.psk = psk;
+  config.hostname = hostname;
 
   this->connect();
 }
 
 void WiFiController::connect() {
   if (VERBOSE) {
-    Serial.printf("[wifi] ||| connecting to ssid: %s: ", _ssid);
+    Serial.printf("[wifi]   ||| connecting to ssid: %s: ", config.ssid.c_str());
   }
 
   WiFi.disconnect(true);
@@ -34,7 +41,7 @@ void WiFiController::connect() {
 #elif ESP8266
   WiFi.onStationModeConnected([this](WiFiEventStationModeConnected event) {
     if (this->VERBOSE) {
-      Serial.printf("[wifi] connected to: %s\n", event.ssid.c_str());
+      Serial.printf("[wifi]   ||| connected to: %s\n", event.ssid.c_str());
     }
   });
 
@@ -60,7 +67,8 @@ void WiFiController::connect() {
     }
   });
 #endif
-  WiFi.begin(_ssid, _psk);
+
+  WiFi.begin(config.ssid.c_str(), config.psk.c_str());
 
 #ifdef ESP32
   WiFi.setHostname(MQTT_CLIENT);
@@ -77,7 +85,7 @@ void WiFiController::connect() {
   if (VERBOSE) {
     Serial.println(" success.");
     IPAddress ip = WiFi.localIP();
-    Serial.printf("[wifi] ||| ip address: %s\n", ip.toString().c_str());
+    Serial.printf("[wifi]   ||| ip address: %s\n", ip.toString().c_str());
   }
 };
 

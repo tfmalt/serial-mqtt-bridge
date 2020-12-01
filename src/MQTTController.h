@@ -17,18 +17,31 @@ typedef std::function<void(std::string)> OnDisconnectFunction;
 typedef std::function<void(std::string)> OnErrorFunction;
 typedef std::function<void(std::string, std::string)> OnMessageFunction;
 
+struct MQTTConfig {
+  std::string server;
+  uint16_t port;
+  std::string clientname;
+  std::string username;
+  std::string password;
+  uint16_t buffersize;
+};
+
 class MQTTController {
  public:
   const char* version = VERSION;
 
   MQTTController(){};
-  // MQTTController(const char* mqtt_server, const uint16_t _mqtt_port = 1883)
-  //     : mqtt_server(mqtt_server), mqtt_port(_mqtt_port){};
 
   ~MQTTController(){};
 
-  MQTTController& setClient(WiFiController& client);
+  MQTTController& setWiFiController(WiFiController& w);
   MQTTController& setup();
+  MQTTController& setup(const char* server,
+                        uint16_t port,
+                        const char* clientname,
+                        const char* user,
+                        const char* pass,
+                        uint16_t buffer);
 
   MQTTController& onReady(OnReadyFunction callback);
   MQTTController& onDisconnect(OnDisconnectFunction callback);
@@ -54,15 +67,7 @@ class MQTTController {
   void publishInformationData();
 
  private:
-  char* wifi_ssid;
-  char* wifi_psk;
-  char* wifi_hostname;
-  char* mqtt_server;
-  char* mqtt_user;
-  char* mqtt_pass;
-  char* mqtt_client;
-  uint16_t mqtt_port;
-
+  MQTTConfig config;
   char* topic_last_will;
   uint8_t last_will_qos;
   bool last_will_retain;
@@ -73,7 +78,7 @@ class MQTTController {
   bool VERBOSE = false;
 
   PubSubClient client;
-  WiFiController wifiCtrl;
+  WiFiController* wifiCtrl;
 
   OnMessageFunction _onMessage;
   OnReadyFunction _onReady;

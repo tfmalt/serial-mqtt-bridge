@@ -12,27 +12,25 @@ NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3598, 60000);
 // ==========================================================================
 MQTTController& MQTTController::setup() {
   if (VERBOSE) {
-    Serial.printf("[mqtt] ||| Setting up client: %s:%i\n", mqtt_server,
-                  mqtt_port);
-    wifiCtrl.enableVerboseOutput();
+    Serial.printf("[mqtt] ||| Setting up client: %s:%i\n",
+                  config.server.c_str(), config.port);
   }
 
-  wifiCtrl.connect(wifi_ssid, wifi_psk, wifi_hostname);
   timeClient.begin();
   timeClient.update();
 
-  WiFiClient& wifi = wifiCtrl.getWiFiClient();
-  bool setbuf = client.setBufferSize(MQTT_BUFFER_SIZE);
+  WiFiClient& wifi = wifiCtrl->getWiFiClient();
+  bool setbuf = client.setBufferSize(config.buffersize);
 
   if (VERBOSE) {
     Serial.printf("[mqtt] ||| NTP time client started: %s.\n",
                   timeClient.getFormattedTime().c_str());
-    Serial.printf("[mqtt] ||| Set MQTT buffer to %i: %s\n", MQTT_BUFFER_SIZE,
+    Serial.printf("[mqtt] ||| Set MQTT buffer to %i: %s\n", config.buffersize,
                   (setbuf) ? "true" : "false");
   }
 
   client.setClient(wifi);
-  client.setServer(mqtt_server, mqtt_port);
+  client.setServer(config.server.c_str(), config.port);
   client.setCallback(
       [this](char* p_topic, byte* p_message, unsigned int p_length) {
         std::string topic = p_topic;
@@ -46,6 +44,27 @@ MQTTController& MQTTController::setup() {
   return *this;
 }
 
+MQTTController& MQTTController::setup(const char* server,
+                                      uint16_t port = 1883,
+                                      const char* clientname = "",
+                                      const char* user = "",
+                                      const char* pass = "",
+                                      uint16_t buffer = 512) {
+  config.server = server;
+  config.port = port;
+  config.clientname = clientname;
+  config.username = user;
+  config.password = pass;
+  config.buffersize = buffer;
+
+  return this->setup();
+}
+
+MQTTController& MQTTController::setWiFiController(WiFiController& w) {
+  wifiCtrl = &w;
+  return *this;
+}
+
 /**
  * Connect
  */
@@ -53,11 +72,13 @@ void MQTTController::connect() {
   while (!client.connected()) {
     if (VERBOSE) {
       Serial.printf("[mqtt] ||| Attempting connection to %s:%i as \"%s\" ...",
-                    mqtt_server, mqtt_port, mqtt_user);
+                    config.server.c_str(), config.port,
+                    config.username.c_str());
     }
 
-    if (!client.connect(mqtt_client, mqtt_user, mqtt_pass, topic_last_will,
-                        last_will_qos, last_will_retain, last_will_text)) {
+    if (!client.connect(config.server.c_str(), config.username.c_str(),
+                        config.password.c_str(), topic_last_will, last_will_qos,
+                        last_will_retain, last_will_text)) {
       if (VERBOSE) {
         Serial.print(" failed: ");
         Serial.println(client.state());
@@ -108,7 +129,7 @@ void MQTTController::loop() {
  */
 void MQTTController::checkMQTTConnection() {
   if (!client.connected()) {
-    std::string msg = "MQTT broker not connected: " + std::string{mqtt_server};
+    std::string msg = "MQTT broker not connected: " + config.server;
     if (VERBOSE) {
       Serial.printf("[mqtt] ||| %s\n", msg.c_str());
     }
@@ -203,7 +224,7 @@ bool MQTTController::publish(std::string topic, std::string message) {
 void MQTTController::publishInformationData() {
   char* msg;
 
-  WiFiClient& wifi = wifiCtrl.getWiFiClient();
+  WiFiClient& wifi = wifiCtrl->getWiFiClient();
 
   asprintf(&msg,
            "{\"time\": \"%s\", \"version\": \"%s\", \"ip\": \"%s\", "

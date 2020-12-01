@@ -9,11 +9,6 @@
 #include <functional>
 #include <string>
 
-typedef std::function<void()> OnReadyFunction;
-typedef std::function<void(std::string)> OnDisconnectFunction;
-typedef std::function<void(std::string)> OnErrorFunction;
-typedef std::function<void(std::string, std::string)> OnMessageFunction;
-
 enum MQTTMessageType {
   CONNECT,
   CONNECT_ACK,
@@ -35,20 +30,6 @@ struct MQTTMessage {
   char message[256];
 };
 
-struct SMBMQTTConfig {
-  std::string server;
-  uint16_t port;
-  std::string clientname;
-  std::string username;
-  std::string password;
-};
-
-struct SMBWiFiConfig {
-  std::string ssid;
-  std::string psk;
-  std::string hostname;
-};
-
 struct SMBSerialConfig {
   uint8_t rxPin;
   uint8_t txPin;
@@ -56,8 +37,8 @@ struct SMBSerialConfig {
 };
 
 struct SMBConfig {
-  SMBMQTTConfig mqtt;
-  SMBWiFiConfig wifi;
+  MQTTConfig mqtt;
+  WiFiConfig wifi;
   SMBSerialConfig serial;
 };
 
@@ -164,6 +145,7 @@ class SerialMQTTBridge {
     _config.mqtt.clientname = config.mqtt.clientname;
     _config.mqtt.username = config.mqtt.username;
     _config.mqtt.password = config.mqtt.password;
+    _config.mqtt.buffersize = config.mqtt.buffersize || 512;
     _config.serial.baudrate = config.serial.baudrate;
     _config.serial.rxPin = config.serial.rxPin;
     _config.serial.txPin = config.serial.txPin;
@@ -173,23 +155,25 @@ class SerialMQTTBridge {
           "[bridge] ||| running setup: sw serial rx: %i, tx: %i, baud: %i\n",
           _config.serial.rxPin, _config.serial.txPin, _config.serial.baudrate);
       mqtt.enableVerboseOutput();
+      wifi.enableVerboseOutput();
     }
 
-    Serial.println("getting ready to setup software serial");
-    Serial.printf("baud: %i, config: %i\n", _config.serial.baudrate,
-                  SWSERIAL_8N1);
+    wifi.connect(_config.wifi.ssid.c_str(), _config.wifi.psk.c_str(),
+                 _config.wifi.hostname.c_str());
+
+    mqtt.setWiFiController(wifi);
 
     swSer.begin(_config.serial.baudrate, SWSERIAL_8N1, _config.serial.rxPin,
                 _config.serial.txPin);
 
-    Serial.println("done");
-
     rxtx.begin(swSer);
-    Serial.println("rxtx begun");
 
-    mqtt.setup();
+    mqtt.setup(config.mqtt.server.c_str(), config.mqtt.port,
+               config.mqtt.clientname.c_str(), config.mqtt.username.c_str(),
+               config.mqtt.password.c_str(), config.mqtt.buffersize);
+
     // mqtt.setLastwillTopic(topic_status.c_str(), 0, true, "Disconnected");
-    Serial.println("mqtt begun");
+    // Serial.println("mqtt begun");
 
     mqtt.onReady([this]() { this->handleReady(); });
     mqtt.onDisconnect([this](std::string msg) { this->handleDisconnect(msg); });
